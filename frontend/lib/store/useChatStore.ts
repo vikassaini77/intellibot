@@ -28,8 +28,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     setGenerating(true);
 
     try {
-      // 2. Call the Flask backend on port 5001
-      const response = await fetch('http://localhost:5001/chat', {
+      // 2. Call the Flask backend using the environment variable or fallback to local
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      const response = await fetch(`${backendUrl}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
