@@ -57,7 +57,9 @@ export async function POST(req: Request) {
       content: msg.content
     }));
 
-    const response = await fetch('http://127.0.0.1:5001/chat', {
+    const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5001';
+    
+    const response = await fetch(`${backendUrl}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
