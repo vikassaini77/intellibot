@@ -1,0 +1,14 @@
+Flask
+scikit-learn
+pandas
+numpy
+joblib
+PyPDF2
+sentence-transformers
+python-dotenv
+requests
+flask-cors
+gunicorn
+cohere
+google-generativeai
+openai
