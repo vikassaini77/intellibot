@@ -31,16 +31,24 @@ export async function POST(req: Request) {
     const combinedMessage = documentContext ? `${documentContext}\n\nUser Question:\n${userMessage.content}` : userMessage.content;
 
     
-    // Create chat if it doesn't exist
-    const chat = await prisma.chat.upsert({
-      where: { id: chatId },
-      update: {},
-      create: {
-        id: chatId,
-        userId: session.user.id,
-        title: userMessage.content.substring(0, 50) + '...',
-      }
+    // Fetch or create chat securely
+    let chat = await prisma.chat.findUnique({
+      where: { id: chatId }
     });
+
+    if (chat && chat.userId !== session.user.id) {
+      return new Response('Unauthorized access to chat', { status: 403 });
+    }
+
+    if (!chat) {
+      chat = await prisma.chat.create({
+        data: {
+          id: chatId,
+          userId: session.user.id,
+          title: userMessage.content.substring(0, 50) + '...',
+        }
+      });
+    }
 
     // Save the user message
     await prisma.message.create({

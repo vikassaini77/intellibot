@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const chat = await prisma.chat.findUnique({
+    const chat = await prisma.chat.findFirst({
       where: { id: id, userId: session.user.id },
       include: {
         messages: {
@@ -41,8 +41,16 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const json = await req.json();
     const { folderId, isPinned, title } = json;
 
-    const chat = await prisma.chat.update({
-      where: { id: id, userId: session.user.id },
+    let chat = await prisma.chat.findFirst({
+      where: { id: id, userId: session.user.id }
+    });
+
+    if (!chat) {
+      return NextResponse.json({ error: 'Chat not found or unauthorized' }, { status: 404 });
+    }
+
+    chat = await prisma.chat.update({
+      where: { id: id },
       data: {
         ...(folderId !== undefined && { folderId }),
         ...(isPinned !== undefined && { isPinned }),

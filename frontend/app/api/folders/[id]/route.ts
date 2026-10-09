@@ -11,7 +11,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     }
 
     // Ensure the folder belongs to the user before deleting
-    const folder = await prisma.folder.findUnique({
+    const folder = await prisma.folder.findFirst({
       where: { id: id, userId: session.user.id }
     });
 
