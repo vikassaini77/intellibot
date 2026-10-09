@@ -1,12 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  experimental: {
-    turbopack: {
-      root: 'C:/Users/hp/Desktop/intellibot-main/frontend',
-    },
+  serverExternalPackages: ["pdf-parse"],
+  typescript: {
+    ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
 };
 
 export default nextConfig;

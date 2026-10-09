@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import pdfParse from "pdf-parse";
+
+// Use CommonJS require to avoid strict ESM default export errors in Next.js bundler
+const pdfParse = require("pdf-parse");
 
 export async function POST(req: NextRequest) {
   try {
