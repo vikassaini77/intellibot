@@ -1,115 +1,176 @@
-# IntelliBot PRO
+<div align="center">
 
-![IntelliBot Nexus](https://via.placeholder.com/1200x400/05060A/00E5FF?text=IntelliBot+Nexus)
+# 🤖 IntelliBot PRO
 
-IntelliBot PRO is a next-generation, full-stack AI Chat platform. Designed with a stunning cinematic user interface and powered by a robust Python AI backend, it provides a premium experience for conversational AI and document analysis.
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/Python-3.9+-yellow?style=for-the-badge&logo=python)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-Backend-black?style=for-the-badge&logo=flask)](https://flask.palletsprojects.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-1B222D?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 
-## 🌟 Key Features
+**An enterprise-grade conversational AI platform blending stunning UI engineering with robust machine learning capabilities.**
 
-*   **Cinematic UI/UX:** A highly polished, glassmorphic Next.js frontend with smooth Framer Motion animations.
-*   **Dual-Stack Architecture:** 
-    *   **Frontend:** Next.js 14 (App Router), React, Tailwind CSS, NextAuth, and Prisma (SQLite).
-    *   **Backend:** Python, Flask, Custom AI Models for Natural Language Processing (NLP).
-*   **Secure Authentication:** Complete Sign In and Sign Up flows with secure password hashing (`bcrypt`) and local database storage.
-*   **Intelligent Chat Interface:** 
-    *   Organize conversations with Folders.
-    *   Pin favorite chats for quick access.
-    *   Real-time chat interactions seamlessly bridged between Next.js and Python.
-*   **Document Parsing:** Upload PDFs and text documents, parse their contents, and chat with your documents contextually.
-*   **Text-to-Speech:** Integrated browser APIs to vocalize AI responses seamlessly.
+[Explore Features](#-core-features) • [Architecture](#-system-architecture) • [Quick Start](#-quick-start) • [Documentation](#-documentation)
+
+<br/>
+<img src="https://via.placeholder.com/1200x400/05060A/00E5FF?text=IntelliBot+Nexus" alt="IntelliBot Nexus Banner" style="border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+</div>
 
 ---
 
-## 🏗️ Project Structure
+## 🎯 Overview
 
-The project has been elegantly structured into two main domains:
+IntelliBot PRO represents the intersection of cutting-edge design systems and advanced Natural Language Processing (NLP). Designed for high-performance, real-time contextual interactions, the platform empowers users to query knowledge bases, parse unstructured document data, and maintain persistent, organized chat sessions—all encapsulated within a meticulously crafted, zero-latency frontend.
+
+## ✨ Core Features
+
+*   **Cinematic, Glassmorphic UI:** A deeply considered user experience powered by **Framer Motion** and **Tailwind CSS**. Features dynamic, hardware-accelerated ambient backgrounds, micro-interactions, and a responsive spatial design system.
+*   **Decoupled Dual-Stack Architecture:** Strict separation of concerns between the high-throughput Node.js rendering layer and the compute-heavy Python AI processing cluster.
+*   **Advanced Document Intelligence:** In-memory streaming and parsing of multi-modal files (PDFs, CSVs, TXT) via the `/api/upload` ingestion pipeline.
+*   **Contextual Memory & State Management:** Chats are isolated, threaded, and securely persisted via **Prisma ORM**. Includes real-time Folder organization for optimal workspace management.
+*   **Zero-Trust Security Model:** Cryptographically secure authentication via **NextAuth.js**, bcrypt password hashing, and stateless JWT session management.
+
+## 🏗 System Architecture
+
+IntelliBot PRO utilizes a microservice-inspired monorepo structure. The frontend handles state, authentication, and layout rendering, proxying inference requests to the internal Python inference engine.
+
+```mermaid
+graph TD
+    Client[Web Client / Browser]
+    
+    subgraph Frontend [Next.js Cluster (Port 3000)]
+        UI[App Router & Server Components]
+        API_Gateway[Next.js API Routes]
+        Auth[NextAuth Authentication]
+    end
+    
+    subgraph Storage [Persistence Layer]
+        DB[(SQLite / PostgreSQL)]
+        Prisma[Prisma ORM]
+    end
+    
+    subgraph Backend [AI Inference Engine (Port 5001)]
+        Flask[Python Flask Server]
+        NLP[Custom NLP / LLM Models]
+        Memory[Vector / Context Memory]
+    end
+
+    Client <-->|HTTPS / WSS| UI
+    UI <--> API_Gateway
+    API_Gateway <--> Auth
+    API_Gateway <--> Prisma
+    Prisma <--> DB
+    API_Gateway <-->|REST| Flask
+    Flask <--> NLP
+    NLP <--> Memory
+```
+
+---
+
+## 📂 Directory Structure
 
 ```text
-/intellibot-main
+intellibot-main/
+├── backend/                   # 🧠 AI Inference Engine
+│   ├── app.py                 # Core Flask application entry point
+│   ├── intellibot.py          # LLM orchestration and logic layer
+│   ├── chatbot_core/          # Intent detection & parsing modules
+│   ├── model/                 # Serialized weights and ML artifacts
+│   ├── data/                  # Curated datasets & training pipelines
+│   └── requirements.txt       # Python dependency manifest
 │
-├── /frontend               # Next.js UI Application
-│   ├── /app                # Next.js App Router Pages & API Routes
-│   ├── /components         # Global UI Components (Buttons, Modals)
-│   ├── /features           # Domain-Specific UI (Chat, Auth)
-│   └── /prisma             # SQLite Database Schema
+├── frontend/                  # 💻 Presentation & API Layer
+│   ├── app/                   # Next.js App Router (Pages & API)
+│   ├── features/              # Feature-sliced domain logic (Chat, Auth)
+│   ├── components/            # Reusable UI primitives & layouts
+│   ├── prisma/                # Schema definitions & migrations
+│   ├── lib/                   # Utility functions & singleton clients
+│   └── store/                 # Zustand global state management
 │
-├── /backend                # Python AI Engine
-│   ├── app.py              # Main Flask Server
-│   ├── intellibot.py       # Core AI Logic
-│   ├── /model              # Pre-trained ML Models
-│   └── /data               # Training Data & Configurations
-│
-└── start.bat               # Easy one-click launcher for Windows
+└── start.bat                  # 🚀 Local development orchestration script
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-The easiest way to run the entire stack locally is by using the included startup script.
+### 1. Prerequisites
+Ensure your local environment meets the following specifications:
+- **Node.js**: `v18.17.0` or higher
+- **Python**: `v3.9.0` or higher
+- **Git**: For version control
 
-### Prerequisites
-*   [Node.js](https://nodejs.org/) (v18 or higher)
-*   [Python](https://www.python.org/) (v3.8 or higher)
-
-### Installation & Setup
-
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd intellibot-main
-   ```
-
-2. **Install Frontend Dependencies:**
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-3. **Initialize Database:**
-   ```bash
-   cd frontend
-   npx prisma generate
-   npx prisma db push
-   ```
-
-4. **Install Backend Dependencies:**
-   ```bash
-   cd ../backend
-   pip install -r requirements.txt
-   ```
-
-### Running the Application
-
-Simply double-click the `start.bat` file in the root directory, or run it from the command line:
-
+### 2. Clone & Install
 ```bash
-./start.bat
+# Clone the repository
+git clone https://github.com/vikassaini77/intellibot.git
+cd intellibot
+
+# 1. Setup the Next.js Frontend
+cd frontend
+npm install
+
+# Initialize the Database
+npx prisma generate
+npx prisma db push
+
+# 2. Setup the Python Backend
+cd ../backend
+python -m venv venv
+source venv/bin/activate  # Or `venv\Scripts\activate` on Windows
+pip install -r requirements.txt
+cd ..
 ```
 
-This script will automatically open two terminal windows:
-1.  **Frontend Server:** Running Next.js at `http://localhost:3000`
-2.  **Backend Server:** Running Python Flask at `http://127.0.0.1:5001`
+### 3. Launch Development Servers
 
-Navigate to `http://localhost:3000` in your browser, create an account, and start chatting!
+For **Windows** users, simply execute the orchestrator script:
+```cmd
+.\start.bat
+```
+*(This concurrently spins up both the Next.js UI on `localhost:3000` and the Flask Engine on `127.0.0.1:5001`)*
 
----
+For **Mac/Linux**, run these in separate terminal windows:
+```bash
+# Terminal 1: Frontend
+cd frontend && npm run dev
 
-## 🛠️ Technology Stack
-
-**Frontend:**
-*   Next.js (React)
-*   Tailwind CSS (Styling)
-*   Framer Motion (Animations)
-*   Prisma (ORM / Database)
-*   NextAuth.js (Authentication)
-
-**Backend:**
-*   Python 3
-*   Flask
-*   Custom NLP Libraries
+# Terminal 2: Backend
+cd backend && python app.py
+```
 
 ---
 
-## 📝 License
-This project is licensed under the MIT License.
+## 🛠 Tech Stack Details
+
+| Domain | Technologies |
+| :--- | :--- |
+| **Frontend Framework** | Next.js 14 (App Router), React 18, TypeScript |
+| **Styling & Motion** | Tailwind CSS, Framer Motion, Lucide Icons |
+| **State Management** | React Hooks, Zustand (Background Store) |
+| **Authentication** | NextAuth.js, bcryptjs |
+| **Database & ORM** | Prisma Client, SQLite (Configurable to PostgreSQL) |
+| **AI / Backend** | Python 3, Flask, Custom NLP pipelines |
+| **Data Processing** | pdf-parse, native JS File APIs |
+
+---
+
+## 🤝 Contributing
+
+We adhere to rigorous software engineering standards. To contribute:
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Ensure strict TypeScript typings and PEP-8 Python compliance.
+4. Commit your Changes (`git commit -m 'feat: Add some AmazingFeature'`)
+5. Push to the Branch (`git push origin feature/AmazingFeature`)
+6. Open a Pull Request
+
+## 🛡️ License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+<div align="center">
+  <br/>
+  <p>Engineered with precision. Built for the future.</p>
+</div>
