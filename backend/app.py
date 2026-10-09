@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize Cohere Client (Ensuring we use the correct env variable from your .env)
-api_key = os.getenv("COHERE_API_KEY")
+api_key = os.getenv("COHERE_API_KEY", "").strip()
 if not api_key:
     raise ValueError("COHERE_API_KEY is missing from .env file")
 
