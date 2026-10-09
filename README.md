@@ -39,18 +39,18 @@ IntelliBot PRO utilizes a microservice-inspired monorepo structure. The frontend
 graph TD
     Client[Web Client / Browser]
     
-    subgraph Frontend [Next.js Cluster (Port 3000)]
+    subgraph Frontend ["Next.js Cluster (Port 3000)"]
         UI[App Router & Server Components]
         API_Gateway[Next.js API Routes]
         Auth[NextAuth Authentication]
     end
     
-    subgraph Storage [Persistence Layer]
+    subgraph Storage ["Persistence Layer"]
         DB[(SQLite / PostgreSQL)]
         Prisma[Prisma ORM]
     end
     
-    subgraph Backend [AI Inference Engine (Port 5001)]
+    subgraph Backend ["AI Inference Engine (Port 5001)"]
         Flask[Python Flask Server]
         NLP[Custom NLP / LLM Models]
         Memory[Vector / Context Memory]
